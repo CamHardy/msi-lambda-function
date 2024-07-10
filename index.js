@@ -17,11 +17,19 @@ const s3 = new S3Client({
 export const handler = async (event) => {
   console.log(JSON.stringify(event, null, 2));
 
+  // Parse event.body if it exists
+  let body;
+  if (event.body) {
+      body = JSON.parse(event.body);
+  } else {
+      body = event; // In case the body is directly passed
+  }
+
   let scores = {
-    p: event.p, 
-    a: event.a, 
-    e: event.e, 
-    i: event.i
+    p: body.p, 
+    a: body.a, 
+    e: body.e, 
+    i: body.i
   };
 
   const IMAGE_WIDTH = 1000;
@@ -58,13 +66,13 @@ export const handler = async (event) => {
 
     await s3.send(new PutObjectCommand({
       Bucket: 'msi-report-access-nwxxidjqhxxs6mhtabbttgqfnhduwcan1a-s3alias',
-      Key: event.filename || 'test.png',
+      Key: body.filename || 'test.png',
       Body: canvas.toBuffer('image/png')
     }));
 
     response = { 
       statusCode: 200, 
-      body: `https://msi-report-images.s3.ca-central-1.amazonaws.com/${event.filename || 'test.png'}`
+      body: `https://msi-report-images.s3.ca-central-1.amazonaws.com/${body.filename || 'test.png'}`
     };
   } catch (err) {
     response = { 
