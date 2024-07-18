@@ -44,9 +44,9 @@ export function drawBarGraph(ctx, scores, x, y, width, height) {
 
     ctx.translate(x + width / 2, y);
     ctx.fillStyle = 'rgb(33, 33, 33)';
-    ctx.font = 'bold 16px Roboto';
+    ctx.font = 'bold 48px Roboto';
     ctx.textAlign = 'center';
-    ctx.fillText('Results', 0, 30);
+    ctx.fillText('Style Expression', 0, 45);
 
     const ROW_WIDTH = 2 * width / 5;
     const ROW_HEIGHT = height / 8;
@@ -57,26 +57,26 @@ export function drawBarGraph(ctx, scores, x, y, width, height) {
     for (let j = 0; j < AXES.length; j++) {
         // Left title
         ctx.fillStyle = 'rgb(33, 33, 33)';
-        ctx.font = 'bold 14px Roboto';
+        ctx.font = 'bold 48px Roboto';
         ctx.textAlign = 'right';
-        ctx.fillText(AXES[j].name, -ROW_WIDTH, 5);
+        ctx.fillText(AXES[j].name, -ROW_WIDTH - 15, 15);
 
         // Left & right labels
-        ctx.font = '14px Roboto';
-        ctx.fillText(AXES[j].poles[0], -ROW_WIDTH / 2 - 10, 5);
+        ctx.font = '48px Roboto';
+        ctx.fillText(AXES[j].poles[0], -ROW_WIDTH / 2 - 30, 15);
         ctx.textAlign = 'left';
-        ctx.fillText(AXES[j].poles[1], ROW_WIDTH / 2 + 10, 5);
+        ctx.fillText(AXES[j].poles[1], ROW_WIDTH / 2 + 30, 15);
 
         // Color bar
         let wAvgs = calculateWavg(scores.p, scores.a, scores.e, scores.i);
         let barWidth = 0;
 
         for (let k in wAvgs) {
-            barWidth += wAvgs[k] * AXES[j].weightings[k] * (width / 2);
+            barWidth += wAvgs[k] * AXES[j].weightings[k] / 0.4;
         }
 
         ctx.fillStyle = barWidth > 0 ? BAR_COLORS[1] : BAR_COLORS[0];
-        ctx.fillRect(0, -ROW_HEIGHT / 2, barWidth, ROW_HEIGHT);
+        ctx.fillRect(0, -ROW_HEIGHT / 2, barWidth * ROW_WIDTH / 2, ROW_HEIGHT);
 
         // Bar outlines
         ctx.strokeStyle = 'rgb(33, 33, 33)';
@@ -87,10 +87,10 @@ export function drawBarGraph(ctx, scores, x, y, width, height) {
 
     // Center divider line
     ctx.strokeStyle = 'rgb(33, 33, 33)';
-    ctx.lineWidth = 0.5;
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(0, -15);
-    ctx.lineTo(0, -ROW_HEIGHT * AXES.length - ROW_HEIGHT / 2);
+    ctx.moveTo(0, -ROW_HEIGHT / 2);
+    ctx.lineTo(0, -(ROW_HEIGHT * AXES.length) - (ROW_HEIGHT / 2));
     ctx.stroke();
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
